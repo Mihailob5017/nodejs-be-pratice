@@ -3,17 +3,40 @@ import { CreateVandorInput } from '../dto';
 import { Vandor } from '../model';
 import { EncryptPassword, GenerateSalt } from '../util';
 
+export const FindVandor = async (id: string | undefined, email?: string) => {
+	if (email) {
+		return await Vandor.findOne({ email });
+	} else {
+		return await Vandor.findById(id);
+	}
+};
+
 export const GetVandors = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {};
+) => {
+	const vandors = await Vandor.find();
+	if (vandors.length === 0) {
+		return res.status(404).json({ message: 'No vandors found' });
+	}
+
+	return res.json(vandors);
+};
 
 export const GetVandorById = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {};
+) => {
+	const id = req.params.id;
+	const vandor = await FindVandor(id);
+	if (!vandor) {
+		return res.status(404).json({ message: 'Vandor not found' });
+	}
+
+	return res.json(vandor);
+};
 
 export const CreateVandor = async (
 	req: Request,
@@ -31,7 +54,7 @@ export const CreateVandor = async (
 		pinCode,
 	} = <CreateVandorInput>req.body;
 
-	const existsingVandor = await Vandor.findOne({ email });
+	const existsingVandor = await FindVandor(undefined, email);
 	if (existsingVandor) {
 		return res.status(400).json({ message: 'Vandor already exists' });
 	}
