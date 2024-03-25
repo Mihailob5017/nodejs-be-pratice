@@ -4,7 +4,7 @@ import {
   GetFoods,
   VandorLogin,
   getVandorProfile,
-  updateVandorCoverPicture,
+  updateCoverPicture,
   updateVandorProfile,
   updateVandorService,
 } from "../controller";
@@ -36,7 +36,7 @@ router.use(Authenticate);
 router.get("/profile", getVandorProfile);
 router.patch("/profile", updateVandorProfile);
 router.patch("/service", updateVandorService);
-router.patch("/coverimage", images, updateVandorCoverPicture);
+router.patch("/coverimage", images, updateCoverPicture);
 router.post("/food", images, AddFood);
 
 router.get("/foods", GetFoods);

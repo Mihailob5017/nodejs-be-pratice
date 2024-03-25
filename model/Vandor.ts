@@ -46,6 +46,6 @@ const VandorShecma = new Schema<VandorDocument>(
   }
 );
 
-const Vandor = mongoose.model<VandorDocument>("vandor", VandorShecma);
+const Vandor = mongoose.model<VandorDocument>("Vandor", VandorShecma);
 
 export { Vandor };

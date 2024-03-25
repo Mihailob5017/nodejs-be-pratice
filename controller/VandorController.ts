@@ -4,12 +4,9 @@ import { FindVandor } from "./AdminController";
 import { GenerateSignature, ValidatePassword } from "../util";
 import { CreateFoodInput } from "../dto/Food.dto";
 import { Food } from "../model/Food";
+import { ControllerType } from "../types/common";
 
-export const VandorLogin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const VandorLogin: ControllerType = async (req, res, next) => {
   const { email, password } = <VandorLoginInput>req.body;
 
   const existsingVandor = await FindVandor(undefined, email);
@@ -37,11 +34,7 @@ export const VandorLogin = async (
   return res.json({ message: "Invalid credentials" });
 };
 
-export const getVandorProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getVandorProfile: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
@@ -51,11 +44,7 @@ export const getVandorProfile = async (
   }
 };
 
-export const updateVandorProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const updateVandorProfile: ControllerType = async (req, res, next) => {
   const { name, address, foodType, phone } = <EditVandorInputs>req.body;
 
   const user = req.user;
@@ -78,11 +67,7 @@ export const updateVandorProfile = async (
   }
 };
 
-export const updateVandorService = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const updateVandorService: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
@@ -99,11 +84,7 @@ export const updateVandorService = async (
   }
 };
 
-export const AddFood = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const AddFood: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
@@ -131,11 +112,7 @@ export const AddFood = async (
   return res.json({ message: "Something went wrong" });
 };
 
-export const GetFoods = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const GetFoods: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
@@ -148,11 +125,7 @@ export const GetFoods = async (
   return res.json({ message: "Something went wrong" });
 };
 
-export const updateVandorCoverPicture = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const updateCoverPicture: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
