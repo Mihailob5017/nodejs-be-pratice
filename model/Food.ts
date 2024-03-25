@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, mongo } from "mongoose";
 
 interface FoodDoc extends Document {
-  vandorId: string;
+  vandorId: mongoose.Types.ObjectId; // Reference to vendor
   name: string;
   description: string;
   category: string;
@@ -14,7 +14,7 @@ interface FoodDoc extends Document {
 
 const FoodSchema = new Schema(
   {
-    vandorId: { type: String },
+    vandorId: { type: Schema.Types.ObjectId, ref: "Vandor", required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
     category: { type: String },
@@ -36,6 +36,6 @@ const FoodSchema = new Schema(
   }
 );
 
-const Food = mongoose.model<FoodDoc>("food", FoodSchema);
+const Food = mongoose.model<FoodDoc>("Food", FoodSchema);
 
 export { Food };

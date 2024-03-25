@@ -2,12 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { EditVandorInputs, VandorLoginInput } from "../dto";
 import { FindVandor } from "./AdminController";
 import { GenerateSignature, ValidatePassword } from "../util";
+import { CreateFoodInput } from "../dto/Food.dto";
+import { Food } from "../model/Food";
+import { ControllerType } from "../types/common";
 
-export const VandorLogin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const VandorLogin: ControllerType = async (req, res, next) => {
   const { email, password } = <VandorLoginInput>req.body;
 
   const existsingVandor = await FindVandor(undefined, email);
@@ -35,11 +34,7 @@ export const VandorLogin = async (
   return res.json({ message: "Invalid credentials" });
 };
 
-export const getVandorProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getVandorProfile: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
@@ -49,11 +44,7 @@ export const getVandorProfile = async (
   }
 };
 
-export const updateVandorProfile = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const updateVandorProfile: ControllerType = async (req, res, next) => {
   const { name, address, foodType, phone } = <EditVandorInputs>req.body;
 
   const user = req.user;
@@ -76,11 +67,7 @@ export const updateVandorProfile = async (
   }
 };
 
-export const updateVandorService = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const updateVandorService: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
@@ -97,19 +84,59 @@ export const updateVandorService = async (
   }
 };
 
-export const AddFood = (req: Request, res: Response, next: NextFunction) => {
+export const AddFood: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
+    const foodObj = <CreateFoodInput>req.body;
+    const files = req.files as [Express.Multer.File];
+    const vandorObj = await FindVandor(user._id);
+
+    const images = files.map((file: Express.Multer.File) => file.filename);
+
+    if (vandorObj !== null) {
+      const createdFood = await Food.create({
+        vandorId: vandorObj.id,
+        images,
+        rating: 0,
+        ...foodObj,
+      });
+
+      vandorObj.foods.push(createdFood.id);
+
+      const result = await vandorObj.save();
+      return res.json(result);
+    }
   }
 
   return res.json({ message: "Something went wrong" });
 };
 
-export const GetFoods = (req: Request, res: Response, next: NextFunction) => {
+export const GetFoods: ControllerType = async (req, res, next) => {
   const user = req.user;
 
   if (user) {
+    const foods = await Food.find({ vandorId: user._id });
+    if (foods) {
+      return res.json(foods);
+    }
+  }
+
+  return res.json({ message: "Something went wrong" });
+};
+
+export const updateCoverPicture: ControllerType = async (req, res, next) => {
+  const user = req.user;
+
+  if (user) {
+    const vandorObj = await FindVandor(user._id);
+    if (vandorObj !== null) {
+      const files = req.files as [Express.Multer.File];
+      const images = files.map((file: Express.Multer.File) => file.filename);
+      vandorObj.coverImages.push(...images);
+      const result = await vandorObj.save();
+      return res.json(result);
+    }
   }
 
   return res.json({ message: "Something went wrong" });
