@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { GetFoodAvailablity } from "../controller";
 import {
   GetFoodIn30Mins,
+  GetRestourantById,
   GetTopRestourants,
   SearchFoods,
 } from "../controller/ShoppingController";
@@ -16,6 +17,6 @@ router.get("/foods-in-30-minutes/:pincode", GetFoodIn30Mins);
 
 router.get("/search/:pincode/", SearchFoods);
 
-router.get("/restourant/:id", GetTopRestourants);
+router.get("/restourant/:id", GetRestourantById);
 
 export { router as ShoppingRoute };
