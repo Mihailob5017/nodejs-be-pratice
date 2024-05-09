@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model, SchemaTypes } from "mongoose";
 
-interface VandorDocument extends Document {
+export interface VandorDocument extends Document {
   name: string;
   ownerName: string;
   foodType: [string];

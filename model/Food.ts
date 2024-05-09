@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, mongo } from "mongoose";
 
-interface FoodDoc extends Document {
+export interface FoodDoc extends Document {
   vandorId: mongoose.Types.ObjectId; // Reference to vendor
   name: string;
   description: string;
